@@ -1,3 +1,15 @@
 asgiref==3.8.1
+dj-config-url==0.1.1
 Django==5.1.7
+django-cors-headers==4.7.0
+djangorestframework==3.15.2
+djrestframework==5.16.0
+djrf-yasg==2.34.0
+inflection==0.5.1
+mysqlclient==2.2.7
+packaging==24.2
+python-decouple==3.8
+pytz==2025.1
+PyYAML==6.0.2
 sqlparse==0.5.3
+uritemplate==4.1.1
