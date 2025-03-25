@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import RegexValidator
 # Create your models here.
 
 class CustomUser(AbstractUser):
@@ -10,3 +11,28 @@ class CustomUser(AbstractUser):
         ('admin', 'Admin'),
     ]
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='patient')
+    email = models.EmailField(('email address'), unique=True)
+    phone_regex = RegexValidator(
+        regex=r'^\+?1?\d{9,15}$',
+        message='El formato de celular debe ser +9999999999'
+    )
+    phone_number = models.CharField(
+        validators=[phone_regex],
+        max_length=17,
+        blank=True
+    )
+
+    # Metodos de permisos
+    @property
+    def is_patient(self):
+        """ Retorna true si el usuario es paciente """
+        return self.role == 'patient'
+
+    @property
+    def is_doctor(self):
+        """ Retorna true si el usuario es doctor """
+        return self.role == 'doctor'
+
+    @property
+    def is_admin(self):
+        return self.role == 'admin'
