@@ -1,0 +1,155 @@
+App: users
+Modelos:
+User (Extiende AbstractUser)
+Campos base: email, password, role, is_active
+Roles: PATIENT, DOCTOR, ADMIN
+Métodos para permisos y validaciones
+DoctorProfile
+FK: user
+Campos: specialty, license_number, consultation_fee
+Relaciones: available_hours, ratings
+Métodos para disponibilidad
+PatientProfile
+FK: user
+Campos: document_number, birth_date, medical_history
+Relaciones: appointments, prescriptions
+App: appointments
+Modelos:
+Appointment
+FK: patient (User), doctor (DoctorProfile)
+Campos: date, time, status, reason
+Status: PENDING, CONFIRMED, CANCELLED, COMPLETED
+Métodos para validación de horarios
+Schedule (Nuevo modelo sugerido)
+FK: doctor (DoctorProfile)
+Campos: day_of_week, start_time, end_time
+Métodos para verificar disponibilidad
+App: notifications
+Modelos:
+Notification
+FK: user (receptor)
+Campos: type, message, status, created_at
+Types: EMAIL, SMS, IN_APP
+Status: PENDING, SENT, FAILED
+NotificationTemplate (Nuevo modelo sugerido)
+Campos: type, subject, body, variables
+Métodos para renderizar contenido
+App: payments
+Modelos:
+Payment
+FK: appointment
+Campos: amount, status, payment_method
+Status: PENDING, COMPLETED, FAILED, REFUNDED
+Invoice (Nuevo modelo sugerido)
+FK: payment
+Campos: invoice_number, details, tax_info
+App: reports
+Modelos:
+Report
+Campos: type, parameters, result, created_at
+Types: APPOINTMENTS, REVENUE, DOCTORS_PERFORMANCE
+App: medical (Nueva app sugerida)
+Modelos:
+MedicalHistory
+FK: patient (PatientProfile)
+Campos: diagnosis, treatment, notes
+Prescription
+FK: appointment, doctor, patient
+Campos: medications, instructions, date
+Plan de Desarrollo por Fases:Fase 1: Configuración y Base (2 semanas)
+Configuración del Proyecto
+Inicialización de Django
+Configuración de ambiente desarrollo
+Estructura de apps
+Configuración de base de datos
+Implementación de Users App
+Modelo User base
+Autenticación JWT
+Perfiles básicos
+Permisos y roles
+Fase 2: Core Features (4 semanas)
+Sistema de Usuarios Completo
+Completar DoctorProfile
+Completar PatientProfile
+Sistema de horarios
+Validaciones y reglas de negocio
+Sistema de Citas
+Modelo Appointment
+Lógica de reservas
+Validaciones de horarios
+Sistema de estados
+Notificaciones
+Implementación de templates
+Sistema de envío
+Integración con servicios externos
+Queue system para envíos
+Fase 3: Features Secundarias (3 semanas)
+Sistema de Pagos
+Integración con gateway
+Manejo de transacciones
+Generación de facturas
+Sistema de reembolsos
+Sistema de Reportes
+Implementación de queries
+Generación de reportes
+Exportación de datos
+Dashboard analytics
+Historial Médico
+Registro de consultas
+Sistema de prescripciones
+Historial de tratamientos
+Fase 4: API y Seguridad (2 semanas)
+API REST
+Endpoints para cada módulo
+Serializers
+Filtros y búsquedas
+Documentación API
+Seguridad
+Permisos por rol
+Validaciones de datos
+Encriptación
+Auditoría de accesos
+Fase 5: Testing y Optimización (2 semanas)
+Testing
+Tests unitarios por app
+Tests de integración
+Tests de API
+Tests de frontend
+Optimización
+Performance backend
+Optimización de queries
+Caching
+Frontend optimization
+Fase 6: Despliegue (1 semana)
+Preparación
+Configuración de producción
+Migración de datos
+Documentación
+Manuales de usuario
+Deployment
+Configuración de servidor
+SSL/HTTPS
+Monitoreo
+Backups
+Consideraciones Técnicas Adicionales:
+Integraciones Necesarias
+Servicio de emails (SendGrid/Mailgun)
+SMS Gateway (Twilio)
+Payment Gateway (Stripe)
+Storage (AWS S3)
+Seguridad y Compliance
+HIPAA compliance
+GDPR considerations
+Encriptación de datos sensibles
+Auditoría de accesos
+Escalabilidad
+Cache layer (Redis)
+Task queue (Celery)
+Load balancing
+Database optimization
+Monitoreo
+Logging system
+Error tracking
+Performance monitoring
+User analytics
+¿Te gustaría que profundice en algún aspecto específico de esta estructura o que detalle más alguna de las fases?
