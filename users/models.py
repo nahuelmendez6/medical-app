@@ -36,3 +36,13 @@ class CustomUser(AbstractUser):
     @property
     def is_admin(self):
         return self.role == 'admin'
+
+    class Meta:
+        verbose_name = ('Usuario')
+        verbose_name_plural = ('Usuarios')
+        ordering = ['-date_joined']
+        db_table = 'custom_users'
+        indexes = [
+            models.Index(fields=['email']),
+            models.Index(fields=['role'])
+        ]
