@@ -8,8 +8,6 @@ User = get_user_model()
 from .models import CustomUser
 
 
-
-
 class RegisterSerializer(serializers.Serializer):
 
     username = serializers.CharField(
