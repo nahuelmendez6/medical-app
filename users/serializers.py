@@ -108,6 +108,17 @@ class DoctorProfileSerializer(serializers.Serializer):
         decimal_places=2,
     )
 
+    def create(self, validated_data):
+
+        doctor_profile = DoctorProfile.objects.create(
+            user = validated_data['user'],
+            specialty = validated_data['specialty'],
+            license_number = validated_data['license_number'],
+            consultation_fee = validated_data['consultation_fee']
+        )
+
+        return doctor_profile
+
 
 class DoctorScheduleSerializer(serializers.Serializer):
 
@@ -123,3 +134,14 @@ class DoctorScheduleSerializer(serializers.Serializer):
             raise serializers.ValidationError({'end_time':'El horario de finalización debe ser posterio al horario de '
                                                           'comienzo'})
         return data
+
+    def create(self, validated_data):
+
+        doctor_schedule = DoctorSchedule.objects.create(
+            doctor = validated_data['doctor'],
+            day = validated_data['day'],
+            start_time = validated_data['start_time'],
+            end_time = validated_data['end_time']
+        )
+
+        return doctor_schedule
