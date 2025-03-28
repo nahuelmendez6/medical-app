@@ -10,6 +10,21 @@ from .models import CustomUser
 
 class RegisterSerializer(serializers.Serializer):
 
+    first_name = serializers.CharField(
+        max_length=150,
+        required=True
+    )
+
+    last_name = serializers.CharField(
+        max_length=150,
+        required=True
+    )
+
+    dni_number = serializers.CharField(
+        max_length=10,
+        required=True
+    )
+
     username = serializers.CharField(
         max_length=150,
         required=True,

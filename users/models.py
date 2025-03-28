@@ -10,6 +10,9 @@ class CustomUser(AbstractUser):
         ('doctor', 'Doctor'),
         ('admin', 'Admin'),
     ]
+    first_name = models.CharField(max_length=150, null=False)
+    last_name = models.CharField(max_length=150, null=False)
+    dni_number = models.CharField(max_length=8, null=False)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='patient')
     email = models.EmailField(('email address'), unique=True)
     phone_regex = RegexValidator(
