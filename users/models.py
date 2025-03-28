@@ -65,7 +65,12 @@ class DoctorProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='doctor_profile')
     specialty = models.CharField(max_length=25, choices=SPECIALTY_CHOICES, null=False)
     license_number = models.CharField(max_length=10, null=False)
-    consultation_fee = models.DecimalField(null=False)
+    consultation_fee = models.DecimalField(
+        max_digits=10,  # Permite hasta 99999999.99
+        decimal_places=2,  # Dos decimales para valores monetarios
+        null=False,
+        default=0.00,  # Valor por defecto para evitar errores
+    )
 
 class DoctorSchedule(models.Model):
 
@@ -93,10 +98,10 @@ class DoctorSchedule(models.Model):
         ("20:00", "08:00 PM"), ("20:30", "08:30 PM")
     ]
 
-    doctor = models.ForeignKey(DoctorProfile, on_delete=CASCADE(), related_name='doctor_schedule')
+    doctor = models.ForeignKey(DoctorProfile, on_delete=CASCADE, related_name='doctor_schedule')
     day = models.CharField(max_length=10, choices=DAY_CHOICES)
-    start_time = models.CharField(max_length=5, choices=HOUR_CHOICES)
-    end_time = models.CharField(max_length=5, choices=HOUR_CHOICES)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
 
 
 class PatientProfile(models.Model):

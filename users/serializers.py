@@ -5,7 +5,7 @@ from rest_framework_simplejwt.tokens import Token
 
 User = get_user_model()
 
-from .models import CustomUser
+from .models import CustomUser, DoctorProfile, DoctorSchedule
 
 
 class RegisterSerializer(serializers.Serializer):
@@ -92,3 +92,34 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
         token['role'] = user.role
         return token
+
+
+class DoctorProfileSerializer(serializers.Serializer):
+
+    user = serializers.IntegerField()
+    specialty = serializers.ChoiceField(
+        choices=DoctorProfile.SPECIALTY_CHOICES
+    )
+    license_number = serializers.CharField(
+        max_length=10
+    )
+    consultation_fee = serializers.DecimalField(
+        max_digits=10,  # Permite hasta 99999999.99
+        decimal_places=2,
+    )
+
+
+class DoctorScheduleSerializer(serializers.Serializer):
+
+    doctor = serializers.IntegerField()
+    day = serializers.ChoiceField(
+        choices=DoctorSchedule.DAY_CHOICES
+    )
+    start_time = serializers.TimeField(format='%H:%M')
+    end_time = serializers.TimeField(format='%H:%M')
+
+    def validate_times(self, data):
+        if data['start_time'] >= data['end_time']:
+            raise serializers.ValidationError({'end_time':'El horario de finalización debe ser posterio al horario de '
+                                                          'comienzo'})
+        return data
