@@ -97,3 +97,8 @@ class DoctorSchedule(models.Model):
     day = models.CharField(max_length=10, choices=DAY_CHOICES)
     start_time = models.CharField(max_length=5, choices=HOUR_CHOICES)
     end_time = models.CharField(max_length=5, choices=HOUR_CHOICES)
+
+
+class PatientProfile(models.Model):
+
+    user = models.OneToOneField(CustomUser, on_delete=CASCADE, related_name='patient_profile')
