@@ -17,15 +17,13 @@ class Appointments(models.Model):
     patient = models.ForeignKey(PatientProfile, on_delete=models.CASCADE, related_name='appointments_patient')
     doctor = models.ForeignKey(DoctorProfile, on_delete=models.CASCADE, related_name='appointments_doctor')
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
 
     class Meta:
         constraints = [
             UniqueConstraint(fields=['doctor', 'date', 'start_time'], name='unique_appointment')
         ]
 
-class AppointmentSchedule(models.Model):
 
-    appointment = models.ForeignKey(Appointments, on_delete=models.CASCADE, related_name='appointment_date')
-    date = models.DateField()
-    start_time = models.TimeField()
-    end_time = models.TimeField()
