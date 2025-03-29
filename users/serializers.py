@@ -1,3 +1,5 @@
+from typing import Pattern
+
 from django.db.models import IntegerField
 from rest_framework import serializers
 from django.contrib.auth import authenticate, get_user_model
@@ -152,13 +154,9 @@ class DoctorScheduleSerializer(serializers.Serializer):
 
 class PatientProfileSerializer(serializers.Serializer):
 
-    user = IntegerField()
+    user = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
 
     def create(self, validated_data):
-        user_id = validated_data.pop('user')
-        user_instance = PatientProfile.objects.get(id=user_id)
-        patient_profile = PatientProfile.objects.create(
-            user = user_instance
-        )
-
+        user_instance = validated_data.pop('user')
+        patient_profile = PatientProfile.objects.create(user=user_instance)
         return patient_profile
