@@ -78,8 +78,8 @@ class DoctorSchedule(models.Model):
         ('monday', 'Lunes'),
         ('tuesday', 'Martes'),
         ('wednesday', 'Miercoles'),
-        ('Thursday', 'Jueves'),
-        ('Friday', 'Viernes')
+        ('thursday', 'Jueves'),
+        ('friday', 'Viernes')
     ]
 
     HOUR_CHOICES = [

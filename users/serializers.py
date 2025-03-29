@@ -155,9 +155,10 @@ class PatientProfileSerializer(serializers.Serializer):
     user = IntegerField()
 
     def create(self, validated_data):
-
+        user_id = validated_data.pop('user')
+        user_instance = PatientProfile.objects.get(id=user_id)
         patient_profile = PatientProfile.objects.create(
-            user = validated_data['user']
+            user = user_instance
         )
 
         return patient_profile
