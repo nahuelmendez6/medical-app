@@ -110,9 +110,10 @@ class DoctorProfileSerializer(serializers.Serializer):
     )
 
     def create(self, validated_data):
-
+        user_id = validated_data.pop('user')
+        user_instance = CustomUser.objects.get(id=user_id)
         doctor_profile = DoctorProfile.objects.create(
-            user = validated_data['user'],
+            user = user_instance,
             specialty = validated_data['specialty'],
             license_number = validated_data['license_number'],
             consultation_fee = validated_data['consultation_fee']
