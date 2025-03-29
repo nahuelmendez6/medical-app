@@ -1,3 +1,4 @@
+from django.db.models import IntegerField
 from rest_framework import serializers
 from django.contrib.auth import authenticate, get_user_model
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, AuthUser
@@ -5,7 +6,7 @@ from rest_framework_simplejwt.tokens import Token
 
 User = get_user_model()
 
-from .models import CustomUser, DoctorProfile, DoctorSchedule
+from .models import CustomUser, DoctorProfile, DoctorSchedule, PatientProfile
 
 
 class RegisterSerializer(serializers.Serializer):
@@ -145,3 +146,16 @@ class DoctorScheduleSerializer(serializers.Serializer):
         )
 
         return doctor_schedule
+
+
+class PatientProfileSerializer(serializers.Serializer):
+
+    user = IntegerField()
+
+    def create(self, validated_data):
+
+        patient_profile = PatientProfile.objects.create(
+            user = validated_data['user']
+        )
+
+        return patient_profile
