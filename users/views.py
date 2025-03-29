@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.template.context_processors import request
 from rest_framework.decorators import action
 from rest_framework import viewsets, generics, status
 from django.contrib.auth import authenticate
@@ -12,7 +13,9 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from users.serializers import RegisterSerializer, CustomTokenObtainPairSerializer
+from users.models import DoctorProfile
+from users.serializers import (RegisterSerializer, CustomTokenObtainPairSerializer, DoctorProfileSerializer,
+                               DoctorScheduleSerializer, PatientProfileSerializer)
 # Create your views here.
 
 class RegisterView(APIView):
@@ -34,3 +37,51 @@ class RegisterView(APIView):
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+
+
+class CreateDoctorProfileView(APIView):
+
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        """
+        Endpoint para completar el perfil de un doctor
+        """
+        serializer = DoctorProfileSerializer(data=request.data)
+        if serializer.is_valid():
+            doctor_profile = serializer.save()
+            return Response(
+                {'message':'Perfil guardado existosamente'},
+                status=status.HTTP_201_CREATED
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CreateDoctorScheduleView(APIView):
+
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = DoctorScheduleSerializer(data=request.data)
+        if serializer.is_valid():
+            doctor_schedule = serializer.save()
+            return Response(
+                {'message': 'Disponibilidad guardada existosamente'},
+                status=status.HTTP_201_CREATED
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CreatePatientProfileView(APIView):
+
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = PatientProfileSerializer(data=request.data)
+        if serializer.is_valid():
+            patient_profile = serializer.save()
+            return Response(
+                {'message': 'Perfil guardado existosamente'},
+                status=status.HTTP_201_CREATED
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
