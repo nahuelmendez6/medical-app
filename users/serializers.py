@@ -138,9 +138,10 @@ class DoctorScheduleSerializer(serializers.Serializer):
         return data
 
     def create(self, validated_data):
-
+        doctor_id = validated_data.pop('doctor')
+        doctor_instance = DoctorProfile.objects.get(id=doctor_id)
         doctor_schedule = DoctorSchedule.objects.create(
-            doctor = validated_data['doctor'],
+            doctor = doctor_instance,
             day = validated_data['day'],
             start_time = validated_data['start_time'],
             end_time = validated_data['end_time']
