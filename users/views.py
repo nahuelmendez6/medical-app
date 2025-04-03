@@ -5,6 +5,7 @@ from rest_framework import viewsets, generics, status
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
 from django.core.exceptions import ValidationError
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.utils import timezone
 from datetime import timedelta
@@ -15,7 +16,7 @@ from rest_framework.views import APIView
 
 from users.models import DoctorProfile
 from users.serializers import (RegisterSerializer, CustomTokenObtainPairSerializer, DoctorProfileSerializer,
-                               DoctorScheduleSerializer, PatientProfileSerializer)
+                               DoctorScheduleSerializer, PatientProfileSerializer, LoginSerializer)
 # Create your views here.
 
 class RegisterView(APIView):
@@ -38,6 +39,30 @@ class RegisterView(APIView):
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
+class LoginView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+
+        serializer = LoginSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh':str(refresh),
+                'access':str(refresh.access_token),
+                'user':{
+                    'id':user.id,
+                    'first_name':user.first_name,
+                    'last_name':user.last_name,
+                    'dni_number':user.dni_number,
+                    'role':user.role,
+                    'email':user.email,
+                    'phone_number':user.phone_number
+                }
+            }, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class CreateDoctorProfileView(APIView):
 

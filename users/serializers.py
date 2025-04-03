@@ -89,6 +89,34 @@ class RegisterSerializer(serializers.Serializer):
 
         return user
 
+
+class LoginSerializer(serializers.Serializer):
+
+    email = serializers.CharField(required=True)
+    password = serializers.CharField(required=True, write_only=True)
+
+    def validate(self, data):
+        email = data.get('email')
+        password = data.get('password')
+
+        try:
+            user = CustomUser.objects.get(email=email)
+
+            if not user:
+                raise serializers.ValidationError({'error':'Usuario no encontrado'})
+
+            if not user.check_password(password):
+                raise serializers.ValidationError({'error':'Contraseña incorrecta'})
+
+            return {
+                'user':user,
+                'email': email
+            }
+        except CustomUser.DoesNotExist:
+            raise serializers.ValidationError('Usuario no encontrado')
+
+
+
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
@@ -160,3 +188,5 @@ class PatientProfileSerializer(serializers.Serializer):
         user_instance = validated_data.pop('user')
         patient_profile = PatientProfile.objects.create(user=user_instance)
         return patient_profile
+
+

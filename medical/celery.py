@@ -1,9 +1,9 @@
 import os
 from celery import Celery
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'medical_app.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'medical.settings')
 
-app = Celery('medical_app')
+app = Celery('medical')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
 app.autodiscover_tasks()

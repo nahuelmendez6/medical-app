@@ -23,7 +23,7 @@ class CreateAppointmentView(APIView):
             user_patient = CustomUser.objects.get(id=user_id)
             email = user_patient.email
 
-            message = (f"Hola {user_patient.first_name}, tu cita con {appointment.doctor.username} ha sido programada "
+            message = (f"Hola {user_patient.first_name}, tu cita con {appointment.doctor.user.username} ha sido programada "
                        f"para el {appointment.date} a las {appointment.start_time}.")
 
             send_appointment_notification(email, message)
