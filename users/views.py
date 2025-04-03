@@ -10,11 +10,13 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from django.utils import timezone
 from datetime import timedelta
 
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+
 from users.models import DoctorProfile
+from users.permissions import IsDoctor, IsAdmin, IsPatient
 from users.serializers import (RegisterSerializer, CustomTokenObtainPairSerializer, DoctorProfileSerializer,
                                DoctorScheduleSerializer, PatientProfileSerializer, LoginSerializer)
 # Create your views here.
@@ -66,7 +68,7 @@ class LoginView(APIView):
 
 class CreateDoctorProfileView(APIView):
 
-    permission_classes = []
+    permission_classes = [IsAuthenticated, IsAdmin, IsDoctor]
 
     def post(self, request):
         """
@@ -84,7 +86,7 @@ class CreateDoctorProfileView(APIView):
 
 class CreateDoctorScheduleView(APIView):
 
-    permission_classes = [AllowAny]
+    permission_classes = [IsAdmin, IsDoctor]
 
     def post(self, request):
         serializer = DoctorScheduleSerializer(data=request.data)
@@ -99,7 +101,7 @@ class CreateDoctorScheduleView(APIView):
 
 class CreatePatientProfileView(APIView):
 
-    permission_classes = [AllowAny]
+    permission_classes = [IsPatient]
 
     def post(self, request):
         serializer = PatientProfileSerializer(data=request.data)
