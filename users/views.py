@@ -66,7 +66,7 @@ class LoginView(APIView):
 
 class CreateDoctorProfileView(APIView):
 
-    permission_classes = [AllowAny]
+    permission_classes = []
 
     def post(self, request):
         """
