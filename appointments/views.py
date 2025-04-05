@@ -7,7 +7,9 @@ from rest_framework.permissions import IsAuthenticated
 from users.models import CustomUser
 from users.permissions import IsPatient, IsDoctor, IsAdmin
 from .serializers import AppointMentSerializer
-from .tasks import send_appointment_email_task
+from .tasks import send_appointment_email_task, send_doctor_appointment_task
+
+
 # Create your views here.
 
 class CreateAppointmentView(APIView):
@@ -27,6 +29,7 @@ class CreateAppointmentView(APIView):
             user_patient = CustomUser.objects.get(id=user_id)
 
             email = user_patient.email
+            email_doc = user_doctor.email
 
             message = (f"Hola {user_patient.first_name}, tu cita con {appointment.doctor.user.username} ha sido programada "
                        f"para el {appointment.date} a las {appointment.start_time}.")
@@ -34,6 +37,16 @@ class CreateAppointmentView(APIView):
             send_appointment_email_task.delay(
                 email=email,
                 context={
+                    'name': user_patient.username,
+                    'date': appointment.date.strftime('%d%m%Y'),
+                    'start_time': appointment.start_time.strftime('%H:%M'),
+                    'doctor_name': user_doctor.username,
+                }
+            )
+
+            send_doctor_appointment_task.delay(
+                email=email_doc,
+                context = {
                     'name': user_patient.username,
                     'date': appointment.date.strftime('%d%m%Y'),
                     'start_time': appointment.start_time.strftime('%H:%M'),
